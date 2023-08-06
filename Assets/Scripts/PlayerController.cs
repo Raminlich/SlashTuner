@@ -10,11 +10,13 @@ public class PlayerController : MonoBehaviour
     private PlayerInputs playerInputs;
     private InputAction move;
     private InputAction fire;
+    private InputAction look;
 
     private void OnEnable()
     {
         move = playerInputs.Player.Move;
         fire = playerInputs.Player.Fire;
+        look = playerInputs.Player.Look;
         playerInputs.Enable();
 
     }

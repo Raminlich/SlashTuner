@@ -6,11 +6,14 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float speed;
+    public float turnSmooth;
+    public AnimationCurve playerRotationCurve;
     private CharacterController characterController;
     private PlayerInputs playerInputs;
     private InputAction move;
     private InputAction fire;
     private InputAction look;
+    private float turnSmoothVelocity;
 
     private void OnEnable()
     {
@@ -42,12 +45,16 @@ public class PlayerController : MonoBehaviour
     private void Movement()
     {
         Vector2 movementInput = move.ReadValue<Vector2>();
-        if(movementInput != Vector2.zero)
+        if (movementInput != Vector2.zero)
         {
-            var direction = Camera.main.transform.forward;
-            Debug.Log(direction);
-            direction.y = 0;
-            transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+            var direction = Camera.main.transform.eulerAngles;
+            if(direction.magnitude >= 0.01)
+            {
+                float angle = Mathf.SmoothDamp(transform.eulerAngles.y, direction.y, ref turnSmoothVelocity, turnSmooth);
+                transform.rotation = Quaternion.Euler(0, angle, 0);
+            }
+            //transform.eulerAngles = new Vector3(0,direction.y,0);
+
         }
         Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));
         moveDirection = moveDirection * speed * Time.deltaTime;

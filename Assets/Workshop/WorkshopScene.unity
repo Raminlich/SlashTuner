@@ -991,7 +991,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 669ae24a3e2594b4685ce08f7eb57c31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  walkSpeed: 2
+  sprintSpeed: 1.5
   turnSmooth: 0.1
   characterState: 0
 --- !u!1 &1573050656
@@ -1071,8 +1072,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1573050656}
-  m_LocalRotation: {x: -0.09735488, y: -0.000000017124648, z: -0.0000000016751254,
-    w: 0.99524975}
+  m_LocalRotation: {x: -0.09735488, y: 0.000000017124647, z: 0.0000000016751251, w: 0.99524975}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

@@ -36,8 +36,21 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        Vector2 movement = move.ReadValue<Vector2>() * Time.deltaTime * speed;
-        characterController.Move(new Vector3(movement.x,0,movement.y));
-        Debug.Log(move.ReadValue<Vector2>());
+        Movement();
+    }
+
+    private void Movement()
+    {
+        Vector2 movementInput = move.ReadValue<Vector2>();
+        if(movementInput != Vector2.zero)
+        {
+            var direction = Camera.main.transform.forward;
+            Debug.Log(direction);
+            direction.y = 0;
+            transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+        }
+        Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));
+        moveDirection = moveDirection * speed * Time.deltaTime;
+        characterController.Move(moveDirection);
     }
 }

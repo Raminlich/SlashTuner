@@ -66,11 +66,8 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("IsWalking", true);
             var direction = Camera.main.transform.eulerAngles;
-            if(direction.magnitude >= 0.01)
-            {
-                float angle = Mathf.SmoothDamp(transform.eulerAngles.y, direction.y, ref turnSmoothVelocity, turnSmooth);
-                transform.rotation = Quaternion.Euler(0, angle, 0);
-            }
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, direction.y, ref turnSmoothVelocity, turnSmooth);
+            transform.rotation = Quaternion.Euler(0, angle, 0);
         }
         animator.SetBool("IsWalking", false);
         Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));

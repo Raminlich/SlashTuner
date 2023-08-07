@@ -8,24 +8,23 @@ public class PlayerController : MonoBehaviour
 {
     public float speed;
     public float turnSmooth;
+    [SerializeField] private CharacterState characterState;
     public AnimationCurve playerRotationCurve;
     private CharacterController characterController;
     private PlayerInputs playerInputs;
-    private InputAction move;
-    private InputAction fire;
-    private InputAction look;
-    private InputAction roll;
+    private InputAction moveInput;
+    private InputAction fireInput;
+    private InputAction rollInput;
     private Animator animator;
     private float turnSmoothVelocity;
 
     private void OnEnable()
     {
-        move = playerInputs.Player.Move;
-        fire = playerInputs.Player.Fire;
-        look = playerInputs.Player.Look;
-        roll = playerInputs.Player.Roll;
-        roll.performed += RollTrigger;
-        fire.performed += AttackTrigger;
+        moveInput = playerInputs.Player.Move;
+        fireInput = playerInputs.Player.Fire;
+        rollInput = playerInputs.Player.Roll;
+        rollInput.performed += RollTrigger;
+        fireInput.performed += AttackTrigger;
         playerInputs.Enable();
 
     }
@@ -33,11 +32,13 @@ public class PlayerController : MonoBehaviour
     private void AttackTrigger(InputAction.CallbackContext context)
     {
         animator.SetTrigger("AttackTrigger");
+        SetPlayerSate(CharacterState.Attack);
     }
 
     private void RollTrigger(InputAction.CallbackContext context)
     {
         animator.SetTrigger("RollTrigger");
+        SetPlayerSate(CharacterState.Roll);
     }
 
     private void OnDisable()
@@ -59,20 +60,39 @@ public class PlayerController : MonoBehaviour
         Movement();
     }
 
+    public void SetPlayerSate(CharacterState state)
+    {
+        characterState = state;
+    }
+
     private void Movement()
     {
-        Vector2 movementInput = move.ReadValue<Vector2>();
-        if (movementInput != Vector2.zero)
+        if(characterState != CharacterState.Attack && characterState != CharacterState.Roll)
         {
-            animator.SetBool("IsWalking", true);
-            var direction = Camera.main.transform.eulerAngles;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, direction.y, ref turnSmoothVelocity, turnSmooth);
-            transform.rotation = Quaternion.Euler(0, angle, 0);
+            Vector2 movementInput = moveInput.ReadValue<Vector2>();
+            if (movementInput != Vector2.zero)
+            {
+                animator.SetBool("IsWalking", true);
+                var direction = Camera.main.transform.eulerAngles;
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, direction.y, ref turnSmoothVelocity, turnSmooth);
+                transform.rotation = Quaternion.Euler(0, angle, 0);
+            }
+            animator.SetBool("IsWalking", false);
+            Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));
+            moveDirection = moveDirection * speed * Time.deltaTime;
+            characterController.Move(moveDirection);
+            animator.SetFloat("MovementSpeed", characterController.velocity.magnitude);
         }
-        animator.SetBool("IsWalking", false);
-        Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));
-        moveDirection = moveDirection * speed * Time.deltaTime;
-        characterController.Move(moveDirection);
-        animator.SetFloat("MovementSpeed",characterController.velocity.magnitude);
+
     }
+}
+
+
+public enum CharacterState
+{
+    Idle,
+    Walk,
+    Sprint,
+    Roll,
+    Attack
 }

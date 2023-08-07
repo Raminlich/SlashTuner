@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerRollAnimationBehaviour : StateMachineBehaviour
+public class PlayerAnimationStateController : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.applyRootMotion = true;
+    }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -21,7 +21,7 @@ public class PlayerRollAnimationBehaviour : StateMachineBehaviour
     {
         var playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         playerController.SetPlayerSate(CharacterState.Idle);
-        
+        animator.applyRootMotion = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

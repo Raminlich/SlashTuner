@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 262.38358, g: 325.10843, b: 430.30963, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -315,7 +315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: -1.492214, z: -1.71553}
+  m_FollowOffset: {x: 0, y: -0.28, z: -3.49}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -442,7 +442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: -1.492214, z: -1.71553}
+  m_FollowOffset: {x: 0, y: -0.28, z: -3.49}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -634,7 +634,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1236667857}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.90221363, y: 2.2100003, z: -4.3709097}
+  m_LocalPosition: {x: 0.90221363, y: 2.2050002, z: -4.3709097}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -777,7 +777,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1432171851}
   m_LocalRotation: {x: -0.040018186, y: 0, z: 0, w: 0.999199}
-  m_LocalPosition: {x: 0.90221363, y: 2.2100003, z: -4.3709097}
+  m_LocalPosition: {x: 0.90221363, y: 2.2050002, z: -4.3709097}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -978,7 +978,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.04, z: 0}
+  m_Center: {x: 0, y: 1.05, z: 0}
 --- !u!114 &1489616160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,32 +991,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 669ae24a3e2594b4685ce08f7eb57c31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 2
   turnSmooth: 0.1
-  playerRotationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  characterState: 0
 --- !u!1 &1573050656
 GameObject:
   m_ObjectHideFlags: 3
@@ -1094,7 +1071,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1573050656}
-  m_LocalRotation: {x: -0.09735488, y: 0.000000017124647, z: 0.0000000016751251, w: 0.99524975}
+  m_LocalRotation: {x: -0.09735488, y: -0.000000017124648, z: -0.0000000016751254,
+    w: 0.99524975}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1334,7 +1312,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1737177759}
-  m_LocalRotation: {x: -0.040018186, y: 1e-45, z: -0, w: 0.999199}
+  m_LocalRotation: {x: -0.040018186, y: -0, z: -0, w: 0.999199}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1473,7 +1451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: -1.492214, z: -1.71553}
+  m_FollowOffset: {x: 0, y: -0.28, z: -3.49}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -1866,7 +1844,7 @@ PrefabInstance:
     - target: {fileID: 965451144380944930, guid: f7c46d46c7db01e4fbad2dc46d74c277,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.6600001
+      value: 0.655
       objectReference: {fileID: 0}
     - target: {fileID: 965451144380944930, guid: f7c46d46c7db01e4fbad2dc46d74c277,
         type: 3}
@@ -2067,6 +2045,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3632270180156180016, guid: f7c46d46c7db01e4fbad2dc46d74c277,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3642880133946827595, guid: f7c46d46c7db01e4fbad2dc46d74c277,
         type: 3}

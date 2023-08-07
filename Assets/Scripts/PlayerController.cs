@@ -6,39 +6,55 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed;
+    public float walkSpeed;
+    public float sprintSpeed;
     public float turnSmooth;
     [SerializeField] private CharacterState characterState;
-    public AnimationCurve playerRotationCurve;
     private CharacterController characterController;
     private PlayerInputs playerInputs;
     private InputAction moveInput;
     private InputAction fireInput;
     private InputAction rollInput;
+    private InputAction sprintInput;
     private Animator animator;
     private float turnSmoothVelocity;
+    private float speed;
 
     private void OnEnable()
     {
         moveInput = playerInputs.Player.Move;
         fireInput = playerInputs.Player.Fire;
         rollInput = playerInputs.Player.Roll;
-        rollInput.performed += RollTrigger;
-        fireInput.performed += AttackTrigger;
+        sprintInput = playerInputs.Player.Sprint;
+        rollInput.performed += OnRollTrigger;
+        fireInput.performed += OnAttackTrigger;
+        sprintInput.performed += OnSprintTrigger;
+        sprintInput.canceled += OnSprintCanceled;
         playerInputs.Enable();
 
     }
 
-    private void AttackTrigger(InputAction.CallbackContext context)
+    private void OnSprintCanceled(InputAction.CallbackContext context)
+    {
+        speed = walkSpeed;
+    }
+
+    private void OnSprintTrigger(InputAction.CallbackContext context)
+    {
+        speed = walkSpeed + sprintSpeed;
+    }
+
+    private void OnAttackTrigger(InputAction.CallbackContext context)
     {
         animator.SetTrigger("AttackTrigger");
         SetPlayerSate(CharacterState.Attack);
     }
 
-    private void RollTrigger(InputAction.CallbackContext context)
+    private void OnRollTrigger(InputAction.CallbackContext context)
     {
         animator.SetTrigger("RollTrigger");
         SetPlayerSate(CharacterState.Roll);
+        
     }
 
     private void OnDisable()
@@ -54,10 +70,12 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        speed = walkSpeed;
     }
     void Update()
     {
         Movement();
+
     }
 
     public void SetPlayerSate(CharacterState state)
@@ -73,9 +91,7 @@ public class PlayerController : MonoBehaviour
             if (movementInput != Vector2.zero)
             {
                 animator.SetBool("IsWalking", true);
-                var direction = Camera.main.transform.eulerAngles;
-                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, direction.y, ref turnSmoothVelocity, turnSmooth);
-                transform.rotation = Quaternion.Euler(0, angle, 0);
+                RotateTowardDirection();
             }
             animator.SetBool("IsWalking", false);
             Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));
@@ -84,6 +100,13 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("MovementSpeed", characterController.velocity.magnitude);
         }
 
+    }
+
+    private void RotateTowardDirection()
+    {
+        var direction = Camera.main.transform.eulerAngles;
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, direction.y, ref turnSmoothVelocity, turnSmooth);
+        transform.rotation = Quaternion.Euler(0, angle, 0);
     }
 }
 

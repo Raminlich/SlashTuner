@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -36,12 +33,15 @@ public class PlayerController : MonoBehaviour
 
     private void OnSprintCanceled(InputAction.CallbackContext context)
     {
+        SetPlayerSate(CharacterState.Walk);
         speed = walkSpeed;
     }
 
     private void OnSprintTrigger(InputAction.CallbackContext context)
     {
         speed = walkSpeed + sprintSpeed;
+        SetPlayerSate(CharacterState.Sprint);
+
     }
 
     private void OnAttackTrigger(InputAction.CallbackContext context)
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetTrigger("RollTrigger");
         SetPlayerSate(CharacterState.Roll);
-        
+
     }
 
     private void OnDisable()
@@ -85,30 +85,47 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
-     
-        if(characterState != CharacterState.Attack && characterState != CharacterState.Roll)
+        if (characterState != CharacterState.Attack && characterState != CharacterState.Roll)
         {
             Vector2 movementInput = moveInput.ReadValue<Vector2>();
+            var xMotion = movementInput.y;
+            var zMotion = movementInput.x;
+            Vector3 motionVector = new Vector3(xMotion, 0, zMotion);
+            motionVector = transform.TransformPoint(motionVector);
             if (movementInput != Vector2.zero)
             {
-                SetPlayerSate(CharacterState.Walk);
                 animator.SetBool("IsWalking", true);
                 Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));
                 moveDirection = moveDirection * speed * Time.deltaTime;
                 characterController.Move(moveDirection);
-
                 RotateTowardDirection();
+                if (characterState == CharacterState.Sprint)
+                {
+
+                  //  animator.SetBool("IsRunning", true) ;
+
+                }
+                else
+                {
+                   // animator.SetBool("IsRunning", false);
+
+
+                }
+
             }
             else
             {
                 SetPlayerSate(CharacterState.Idle);
                 animator.SetBool("IsWalking", false);
-                
+                characterController.Move(Vector3.zero);
+
             }
-            animator.SetFloat("TrajecetoryForwad", movementInput.x);
-            animator.SetFloat("TrajecetorySide", movementInput.y);
+            Debug.Log("speed is: " + characterController.velocity.sqrMagnitude);
+            animator.SetFloat("CharacterSpeed", (float)(Mathf.Clamp(characterController.velocity.sqrMagnitude,0f,12.5f)/12.5));
+            animator.SetFloat("TrajecetoryForwad",zMotion);
+            animator.SetFloat("TrajecetorySide",xMotion);
         }
-        
+
     }
 
     private void RotateTowardDirection()

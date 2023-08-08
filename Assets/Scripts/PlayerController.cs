@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
     public float walkSpeed;
     public float sprintSpeed;
     public float turnSmooth;
+    public float gravity;
+    public float gravityMultiplier;
     [SerializeField] private CharacterState characterState;
     private CharacterController characterController;
     private PlayerInputs playerInputs;
@@ -16,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private float turnSmoothVelocity;
     private float speed;
+    private Vector3 movementDirection;
 
     private void OnEnable()
     {
@@ -75,6 +78,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
+        SetGravity();
         Movement();
 
     }
@@ -98,8 +102,8 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("IsWalking", true);
                 animator.SetBool("OnAttack", false);
                 Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));
-                moveDirection = moveDirection * speed * Time.deltaTime;
-                characterController.Move(moveDirection);
+                movementDirection = moveDirection * speed * Time.deltaTime;
+                characterController.Move(movementDirection);
                 RotateTowardDirection();
                 if (characterState == CharacterState.Sprint)
                 {
@@ -128,6 +132,20 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("TrajecetorySide",xMotion);
         }
 
+    }
+
+    private void SetGravity()
+    {
+        if(!characterController.isGrounded)
+        {
+            Debug.Log("Is not grounded");
+            characterController.Move(new Vector3(0, gravity, 0) * Time.deltaTime * gravityMultiplier);
+        }
+        else
+        {
+            Debug.Log("Is grounded");
+
+        }
     }
 
     private void RotateTowardDirection()

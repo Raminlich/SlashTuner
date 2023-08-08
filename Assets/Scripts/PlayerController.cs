@@ -50,14 +50,19 @@ public class PlayerController : MonoBehaviour
     private void OnAttackTrigger(InputAction.CallbackContext context)
     {
         //animator.SetTrigger("AttackTrigger");
-        SetPlayerSate(CharacterState.Attack);
-        animator.SetBool("OnAttack", true);
+        if(characterState != CharacterState.Roll) 
+        {
+            SetPlayerSate(CharacterState.Attack);
+            animator.SetBool("OnAttack", true);
+        }
+
     }
 
     private void OnRollTrigger(InputAction.CallbackContext context)
     {
         animator.SetTrigger("RollTrigger");
         SetPlayerSate(CharacterState.Roll);
+        animator.SetFloat("CharacterSpeed", 0);
 
     }
 
@@ -70,16 +75,17 @@ public class PlayerController : MonoBehaviour
     {
         playerInputs = new PlayerInputs();
         animator = GetComponent<Animator>();
+        characterController = GetComponent<CharacterController>();
+
     }
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
         speed = walkSpeed;
     }
     void Update()
     {
-        SetGravity();
         Movement();
+        SetGravity();
 
     }
 
@@ -92,41 +98,23 @@ public class PlayerController : MonoBehaviour
     {
         if (characterState != CharacterState.Attack && characterState != CharacterState.Roll)
         {
-            Vector2 movementInput = moveInput.ReadValue<Vector2>();
-            var xMotion = movementInput.y;
-            var zMotion = movementInput.x;
-            Vector3 motionVector = new Vector3(xMotion, 0, zMotion);
-            motionVector = transform.TransformPoint(motionVector);
-            if (movementInput != Vector2.zero)
+            Vector2 inputValue = moveInput.ReadValue<Vector2>();
+            var xMotion = inputValue.y;
+            var zMotion = inputValue.x;
+            if (inputValue != Vector2.zero)
             {
                 animator.SetBool("IsWalking", true);
-                animator.SetBool("OnAttack", false);
-                Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));
+                Vector3 moveDirection = transform.TransformDirection(new Vector3(inputValue.x, 0, inputValue.y));
                 movementDirection = moveDirection * speed * Time.deltaTime;
                 characterController.Move(movementDirection);
                 RotateTowardDirection();
-                if (characterState == CharacterState.Sprint)
-                {
-
-                  //  animator.SetBool("IsRunning", true) ;
-
-                }
-                else
-                {
-                   // animator.SetBool("IsRunning", false);
-
-
-                }
 
             }
             else
             {
                 SetPlayerSate(CharacterState.Idle);
                 animator.SetBool("IsWalking", false);
-                characterController.Move(Vector3.zero);
-
             }
-            Debug.Log("speed is: " + characterController.velocity.sqrMagnitude);
             animator.SetFloat("CharacterSpeed", (float)(Mathf.Clamp(characterController.velocity.sqrMagnitude,0f,12.5f)/12.5));
             animator.SetFloat("TrajecetoryForwad",zMotion);
             animator.SetFloat("TrajecetorySide",xMotion);
@@ -163,5 +151,6 @@ public enum CharacterState
     Walk,
     Sprint,
     Roll,
-    Attack
+    Attack,
+    Fall
 }

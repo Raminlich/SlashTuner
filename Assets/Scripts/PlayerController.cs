@@ -85,21 +85,30 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
+     
         if(characterState != CharacterState.Attack && characterState != CharacterState.Roll)
         {
             Vector2 movementInput = moveInput.ReadValue<Vector2>();
             if (movementInput != Vector2.zero)
             {
+                SetPlayerSate(CharacterState.Walk);
                 animator.SetBool("IsWalking", true);
+                Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));
+                moveDirection = moveDirection * speed * Time.deltaTime;
+                characterController.Move(moveDirection);
+
                 RotateTowardDirection();
             }
-            animator.SetBool("IsWalking", false);
-            Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));
-            moveDirection = moveDirection * speed * Time.deltaTime;
-            characterController.Move(moveDirection);
-            animator.SetFloat("MovementSpeed", characterController.velocity.magnitude);
+            else
+            {
+                SetPlayerSate(CharacterState.Idle);
+                animator.SetBool("IsWalking", false);
+                
+            }
+            animator.SetFloat("TrajecetoryForwad", movementInput.x);
+            animator.SetFloat("TrajecetorySide", movementInput.y);
         }
-
+        
     }
 
     private void RotateTowardDirection()

@@ -22,6 +22,7 @@ public class PlayerAnimationStateController : StateMachineBehaviour
         var playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         playerController.SetPlayerSate(CharacterState.Idle);
         animator.applyRootMotion = false;
+        animator.SetBool("OnAttack", false);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

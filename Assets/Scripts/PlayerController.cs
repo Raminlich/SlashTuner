@@ -46,8 +46,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnAttackTrigger(InputAction.CallbackContext context)
     {
-        animator.SetTrigger("AttackTrigger");
+        //animator.SetTrigger("AttackTrigger");
         SetPlayerSate(CharacterState.Attack);
+        animator.SetBool("OnAttack", true);
     }
 
     private void OnRollTrigger(InputAction.CallbackContext context)
@@ -95,6 +96,7 @@ public class PlayerController : MonoBehaviour
             if (movementInput != Vector2.zero)
             {
                 animator.SetBool("IsWalking", true);
+                animator.SetBool("OnAttack", false);
                 Vector3 moveDirection = transform.TransformDirection(new Vector3(movementInput.x, 0, movementInput.y));
                 moveDirection = moveDirection * speed * Time.deltaTime;
                 characterController.Move(moveDirection);

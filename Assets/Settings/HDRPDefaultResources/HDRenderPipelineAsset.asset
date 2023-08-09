@@ -36,7 +36,7 @@ MonoBehaviour:
     colorBufferFormat: 74
     supportCustomPass: 1
     customBufferFormat: 12
-    supportedLitShaderMode: 2
+    supportedLitShaderMode: 3
     planarReflectionResolution:
       m_Values: 000100000004000000080000
       m_SchemaId:
@@ -82,13 +82,13 @@ MonoBehaviour:
         serializedVersion: 2
         m_Bits: 0
       supportFabricConvolution: 0
-      maxDirectionalLightsOnScreen: 16
+      maxDirectionalLightsOnScreen: 32
       maxPunctualLightsOnScreen: 512
       maxAreaLightsOnScreen: 64
-      maxCubeReflectionOnScreen: 48
+      maxCubeReflectionOnScreen: 64
       maxPlanarReflectionOnScreen: 16
       maxDecalsOnScreen: 512
-      maxLightsPerClusterCell: 8
+      maxLightsPerClusterCell: 24
       maxLocalVolumetricFogSize: 32
       maxLocalVolumetricFogOnScreen: 64
     hdShadowInitParams:

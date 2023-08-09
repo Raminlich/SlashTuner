@@ -1,10 +1,12 @@
 {
   "dependencies": {
+    "com.needle.shadergraph-markdown": "https://github.com/needle-tools/shadergraph-markdown.git",
     "com.unity.cinemachine": "2.9.7",
     "com.unity.collab-proxy": "2.0.5",
     "com.unity.feature.development": "1.0.1",
     "com.unity.inputsystem": "1.6.3",
     "com.unity.probuilder": "5.1.0",
+    "com.unity.recorder": "4.0.1",
     "com.unity.render-pipelines.high-definition": "14.0.8",
     "com.unity.render-pipelines.high-definition-config": "14.0.8",
     "com.unity.textmeshpro": "3.0.6",

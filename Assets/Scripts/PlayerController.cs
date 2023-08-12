@@ -1,14 +1,17 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float walkSpeed;
-    public float sprintSpeed;
-    public float turnSmooth;
-    public float gravity;
-    public float gravityMultiplier;
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private float sprintSpeed;
+    [SerializeField] private int movementRotationFrames;
+    [SerializeField] private int rollFrames;
+    [SerializeField] private float gravityMultiplier;
     [SerializeField] private CharacterState characterState;
+    [SerializeField] private MovementRotationType movementRotationType;
     private CharacterController characterController;
     private PlayerInputs playerInputs;
     private InputAction moveInput;
@@ -20,6 +23,9 @@ public class PlayerController : MonoBehaviour
     private float speed;
     private Vector3 movementDirection;
     private Vector2 moveInputValue;
+    private const float gravity = -9.81f;
+    public float yLocal;
+    public float yGlobal;
 
     private void OnEnable()
     {
@@ -69,28 +75,42 @@ public class PlayerController : MonoBehaviour
 
     private void StartMove()
     {
-        var moveDirection = transform.TransformDirection(new Vector3(moveInputValue.x, 0, moveInputValue.y));
         if (characterState == CharacterState.Roll || characterState == CharacterState.Attack) return;
+        var moveDirection = transform.TransformDirection(new Vector3(moveInputValue.x, 0, moveInputValue.y));
         animator.SetBool("IsWalking", true);
         movementDirection = moveDirection * speed * Time.deltaTime;
-        ApplyCharacterRotation();
+        CameraBaseRotation();
+    }
+
+    private void CameraBaseRotation()
+    {
+        var direction = Camera.main.transform.eulerAngles;
+        ApplyCharacterRotation(direction);
+    }
+
+    private void InputBasedRotation()
+    {
+        var angle = Mathf.Atan2(moveInputValue.x, moveInputValue.y) * Mathf.Rad2Deg;
+        var direction = new Vector3(0, angle+transform.eulerAngles.y, 0);
+        ApplyCharacterRotation(direction);
     }
 
     private void CancelMove()
     {
-        SetPlayerSate(CharacterState.Idle);
         animator.SetBool("IsWalking", false);
         movementDirection = Vector3.zero;
     }
 
     private void ApplyMovement()
     {
+        if (characterState == CharacterState.Roll || characterState == CharacterState.Attack) return;
         movementDirection += GetGravityMovementValue();
         characterController.Move(movementDirection);
-
-        animator.SetFloat("CharacterSpeed", (float)(Mathf.Clamp(characterController.velocity.sqrMagnitude, 0f, 12.5f) / 12.5));
+        var charSpeed = Mathf.Clamp(characterController.velocity.sqrMagnitude, 0, 12.5f) / 12.5f;
+        animator.SetFloat("CharacterSpeed", charSpeed);
         animator.SetFloat("TrajecetoryForwad", moveInputValue.x);
         animator.SetFloat("TrajecetorySide", moveInputValue.y);
+
     }
 
     public void SetPlayerSate(CharacterState state)
@@ -98,10 +118,10 @@ public class PlayerController : MonoBehaviour
         characterState = state;
     }
 
-    private void ApplyCharacterRotation()
+    private void ApplyCharacterRotation(Vector3 direction)
     {
-        var direction = Camera.main.transform.eulerAngles;
-        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, direction.y, ref turnSmoothVelocity, turnSmooth);
+        float rotationFrames = (float)movementRotationFrames / 60;
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, direction.y, ref turnSmoothVelocity, rotationFrames);
         transform.rotation = Quaternion.Euler(0, angle, 0);
     }
 
@@ -124,21 +144,26 @@ public class PlayerController : MonoBehaviour
 
     private void OnAttackTrigger(InputAction.CallbackContext context)
     {
+        movementDirection = Vector3.zero;
         if (characterState != CharacterState.Roll)
         {
-            SetPlayerSate(CharacterState.Attack);
             animator.SetBool("OnAttack", true);
         }
-        movementDirection = Vector3.zero;
     }
 
     private void OnRollTrigger(InputAction.CallbackContext context)
     {
-        animator.SetTrigger("RollTrigger");
-        SetPlayerSate(CharacterState.Roll);
-        animator.SetFloat("CharacterSpeed", 0);
-        movementDirection = Vector3.zero;
+        if (characterState != CharacterState.Roll)
+        {
+            if (moveInputValue != Vector2.zero)
+                StartCoroutine(GameplayHelper.FramedAction(() => InputBasedRotation(), rollFrames));
+
+            animator.SetTrigger("RollTrigger");
+            animator.SetFloat("CharacterSpeed", 0);
+            movementDirection = Vector3.zero;
+        }
     }
+
 }
 public enum CharacterState
 {
@@ -148,4 +173,10 @@ public enum CharacterState
     Roll,
     Attack,
     Fall
+}
+
+public enum MovementRotationType
+{
+    Camera,
+    Input
 }

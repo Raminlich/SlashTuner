@@ -3990,8 +3990,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 2
   sprintSpeed: 1.5
-  turnSmooth: 0.1
+  movementRotationFrames: 5
+  rollFrames: 120
+  gravityMultiplier: 2
   characterState: 0
+  movementRotationType: 0
 --- !u!95 &1233278940376548320
 Animator:
   serializedVersion: 5

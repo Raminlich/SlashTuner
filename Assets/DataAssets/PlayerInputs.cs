@@ -10,6 +10,7 @@ public class PlayerInputs : MonoBehaviour
     public bool sprint;
     public Action attackAction;
     public Action lockAction;
+    public Action dodgeAction;
 
     public bool analogMovement;
 
@@ -48,6 +49,18 @@ public class PlayerInputs : MonoBehaviour
     public void OnLock()
     {
         LockInput();
+    }
+
+    public void OnDodge()
+    {
+        DodgeInput();
+    }
+
+    //----------------------------------------------------------------------
+
+    private void DodgeInput()
+    {
+        dodgeAction?.Invoke();
     }
 
     public void AttackInput()

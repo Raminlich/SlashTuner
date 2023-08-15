@@ -1,4 +1,5 @@
 ﻿using Cinemachine;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -147,7 +148,12 @@ namespace StarterAssets
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
             _input.lockAction += LockOnTarget;
+            _input.dodgeAction += Dodge;
+        }
 
+        private void Dodge()
+        {
+            _animator.SetTrigger("Dodge");
         }
 
         private void Update()
@@ -291,11 +297,20 @@ namespace StarterAssets
             {
                 var moveDirection = transform.TransformDirection(new Vector3(_input.move.x, 0, _input.move.y));
                 _controller.Move(moveDirection * 2 * Time.deltaTime);
-                Vector3 lookAtRotation = Quaternion.LookRotation(target.position - transform.position).eulerAngles;
-                transform.rotation = Quaternion.Euler(Vector3.Scale(lookAtRotation, new Vector3(0, 1, 0)));
                 _animator.SetFloat("StrifeX", _input.move.x);
                 _animator.SetFloat("StrifeY", _input.move.y);
             }
+            LockRotation();
+
+
+        }
+
+        private void LockRotation()
+        {
+            Vector3 lookAtRotation = Quaternion.LookRotation(target.position - transform.position).eulerAngles;
+            var rotationScaleValue = Vector3.Scale(lookAtRotation, new Vector3(0, 1, 0));
+            var rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, rotationScaleValue.y, ref _rotationVelocity, RotationSmoothTime);
+            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
 
         }
 

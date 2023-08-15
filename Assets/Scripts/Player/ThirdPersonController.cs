@@ -426,6 +426,10 @@ namespace StarterAssets
         {
             state = value;
         }
+        public CharacterState GetPlayerState()
+        {
+            return state;
+        }
     }
 }
 

@@ -185,7 +185,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1640687886363498, guid: 02118f3f769d0104dbc7533300879896, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1767544200010434, guid: 02118f3f769d0104dbc7533300879896, type: 3}
       propertyPath: m_IsActive
@@ -897,6 +897,16 @@ PrefabInstance:
       propertyPath: lockedMovementCurve.m_Curve.Array.data[1].tangentMode
       value: 34
       objectReference: {fileID: 0}
+    - target: {fileID: 829713689695421468, guid: dbafc8e6a08c46f40973d8dfb31cd840,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1161015349458093203, guid: dbafc8e6a08c46f40973d8dfb31cd840,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4042558293172683269, guid: dbafc8e6a08c46f40973d8dfb31cd840,
         type: 3}
       propertyPath: m_RootOrder
@@ -956,6 +966,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerArmature
+      objectReference: {fileID: 0}
+    - target: {fileID: 8672506115047936033, guid: dbafc8e6a08c46f40973d8dfb31cd840,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5391087546200780685, guid: dbafc8e6a08c46f40973d8dfb31cd840, type: 3}

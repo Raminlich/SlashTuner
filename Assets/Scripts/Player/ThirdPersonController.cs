@@ -1,22 +1,17 @@
 ﻿using Cinemachine;
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
-#endif
 
-/* Note: animations are called via the controller for both the character and capsule using animator null checks
- */
 
 namespace StarterAssets
 {
-    [RequireComponent(typeof(CharacterController))]
-#if ENABLE_INPUT_SYSTEM 
-    [RequireComponent(typeof(PlayerInput))]
-#endif
     public class ThirdPersonController : MonoBehaviour
     {
         [SerializeField] private CharacterState state;
         [SerializeField] private bool LockOn;
+        public Vector3 valueTest;
+        private float lockedAnimationBlend;
+
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
@@ -30,10 +25,6 @@ namespace StarterAssets
 
         [Tooltip("Acceleration and deceleration")]
         public float SpeedChangeRate = 10.0f;
-
-        public AudioClip LandingAudioClip;
-        public AudioClip[] FootstepAudioClips;
-        [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
 
         [Space(10)]
         [Tooltip("The height the player can jump")]
@@ -296,23 +287,35 @@ namespace StarterAssets
 
         private void LockedMove()
         {
-            var moveDirection = transform.TransformDirection(new Vector3(_input.move.x, 0, _input.move.y));
-            print(moveDirection);
+            if (state == CharacterState.Locomotion)
+            {
+                var moveDirection = transform.TransformDirection(new Vector3(_input.move.x, 0, _input.move.y));
+                _controller.Move(moveDirection * 2 * Time.deltaTime);
+                Vector3 lookAtRotation = Quaternion.LookRotation(target.position - transform.position).eulerAngles;
+                transform.rotation = Quaternion.Euler(Vector3.Scale(lookAtRotation, new Vector3(0, 1, 0)));
+                _animator.SetFloat("StrifeX", _input.move.x);
+                _animator.SetFloat("StrifeY", _input.move.y);
+            }
 
-            _controller.Move(moveDirection * 2 * Time.deltaTime);
-            var direction = target.transform.position - transform.position;
-            //Quaternion lookAtDirection = Quaternion.LookRotation(new Vector3(transform.rotation.x, direction.y, transform.rotation.z));
-            //transform.rotation = lookAtDirection;
-            Vector3 lookAtRotation = Quaternion.LookRotation(target.position - transform.position).eulerAngles;
-            transform.rotation = Quaternion.Euler(Vector3.Scale(lookAtRotation, new Vector3(0,1,0)));
         }
 
         private void LockOnTarget()
         {
-            LockOn = true;
-            CinemachineCameraTarget.transform.localPosition = new Vector3(2f, 1.375f, 0f);
-            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(20f, 0f, 0f);
-            GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = target;
+            LockOn = !LockOn;
+            _animator.SetBool("LockOn", LockOn);
+
+            if (!LockOn)
+            {
+                GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = CinemachineCameraTarget.transform;
+                CinemachineCameraTarget.transform.localPosition = new Vector3(0, 1.22f, 0f);
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(0, 0f, 0f);
+            }
+            else
+            {
+                GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = target;
+                CinemachineCameraTarget.transform.localPosition = new Vector3(2f, 0.22f, 0f);
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(20f, 0f, 0f);
+            }
         }
 
         private void JumpAndGravity()
@@ -403,26 +406,6 @@ namespace StarterAssets
             Gizmos.DrawSphere(
                 new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
                 GroundedRadius);
-        }
-
-        private void OnFootstep(AnimationEvent animationEvent)
-        {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
-            {
-                if (FootstepAudioClips.Length > 0)
-                {
-                    var index = Random.Range(0, FootstepAudioClips.Length);
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
-                }
-            }
-        }
-
-        private void OnLand(AnimationEvent animationEvent)
-        {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
-            {
-                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
-            }
         }
         public void SetPlayerState(CharacterState value)
         {

@@ -1,6 +1,4 @@
 using StarterAssets;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAnimationStateController : StateMachineBehaviour
@@ -10,7 +8,7 @@ public class PlayerAnimationStateController : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        playerController = GameObject.Find("PlayerArmature").GetComponent<ThirdPersonController>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<ThirdPersonController>();
         playerController.SetPlayerState(state);
         animator.applyRootMotion = true;
     }
@@ -24,8 +22,11 @@ public class PlayerAnimationStateController : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        playerController.SetPlayerState(CharacterState.Locomotion);
-        animator.applyRootMotion = false;
+        if (!animator.GetBool("Attack"))
+        {
+            playerController.SetPlayerState(CharacterState.Locomotion);
+            animator.applyRootMotion = false;
+        }
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

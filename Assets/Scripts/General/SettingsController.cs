@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SettingsController : MonoBehaviour
 {
-    public CursorLockMode cursorMode;
+    public int targetFrame;
     private void Start()
     {
-        Cursor.lockState = cursorMode;
+        Application.targetFrameRate = targetFrame;
     }
 }

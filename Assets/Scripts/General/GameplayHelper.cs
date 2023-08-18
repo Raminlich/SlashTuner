@@ -1,21 +1,26 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameplayHelper
 {
-
-    public static IEnumerator FramedAction(int frameInterval, Action action,Action callback = null)
+    private int frameInterval;
+    public IEnumerator FramedAction(int frames, Action action, Action callback = null)
     {
+        frameInterval = frames;
         Debug.Log($"Starting Action with {frameInterval} frames");
         while (frameInterval-- > 0)
         {
-            action.Invoke();
+            action?.Invoke();
             frameInterval--;
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForFixedUpdate();
         }
         callback?.Invoke();
         Debug.Log("Action is Done");
+    }
+
+    public int GetCurrentInterval()
+    {
+        return frameInterval;
     }
 }

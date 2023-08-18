@@ -10,8 +10,6 @@ namespace StarterAssets
     {
         [SerializeField] private CharacterState state;
         [SerializeField] private bool LockOn;
-        public Vector3 valueTest;
-        private float lockedAnimationBlend;
 
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -257,7 +255,6 @@ namespace StarterAssets
 
                 // normalise input direction
                 Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
-                Debug.Log(inputDirection);
                 // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
                 // if there is a move input rotate player when the player is moving
                 if (_input.move != Vector2.zero)

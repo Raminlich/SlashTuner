@@ -4956,6 +4956,7 @@ GameObject:
   - component: {fileID: 7101040760753394346}
   - component: {fileID: 72076430880367084}
   - component: {fileID: 5907140830668931637}
+  - component: {fileID: 4754082301108336076}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -5041,7 +5042,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   LockOn: 0
-  valueTest: {x: 0, y: 0, z: 0}
   MoveSpeed: 2
   SprintSpeed: 5
   RotationSmoothTime: 0.091
@@ -5213,6 +5213,21 @@ MonoBehaviour:
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
+--- !u!114 &4754082301108336076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7270915617698301595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aba3ece5ca048cb49be3dcd69f3085b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 0
+  damage: 0
+  bleedMultiplyer: 0
 --- !u!1 &7433739611636211289
 GameObject:
   m_ObjectHideFlags: 0

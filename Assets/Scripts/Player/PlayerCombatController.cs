@@ -1,11 +1,14 @@
 using StarterAssets;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 public class PlayerCombatController : MonoBehaviour
 {
     [SerializeField] private int framesBetweenCombo;
     [SerializeField] private int firstAttackFrames;
     [SerializeField] private int secondAttackFrames;
+    [SerializeField] private float targetFindRadius;
     public int currentAttackFrames;
     private Animator animator;
     private PlayerInputs inputs;

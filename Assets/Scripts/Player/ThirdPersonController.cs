@@ -10,6 +10,7 @@ namespace StarterAssets
     {
         [SerializeField] private CharacterState state;
         [SerializeField] private bool LockOn;
+        [SerializeField] private float lockOnTargetRadius;
 
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -103,7 +104,7 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
-        public Transform target;
+        private Transform lockTarget;
 
         private bool IsCurrentDeviceMouse
         {
@@ -304,7 +305,7 @@ namespace StarterAssets
 
         private void LockRotation()
         {
-            Vector3 lookAtRotation = Quaternion.LookRotation(target.position - transform.position).eulerAngles;
+            Vector3 lookAtRotation = Quaternion.LookRotation(lockTarget.position - transform.position).eulerAngles;
             var rotationScaleValue = Vector3.Scale(lookAtRotation, new Vector3(0, 1, 0));
             var rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, rotationScaleValue.y, ref _rotationVelocity, RotationSmoothTime);
             transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
@@ -313,21 +314,23 @@ namespace StarterAssets
 
         private void LockOnTarget()
         {
+            lockTarget = GameplayUtility.SphereOverlapClosestObject(transform, lockOnTargetRadius, "Enemy");
+            if (lockTarget == null) return;
             LockOn = !LockOn;
-            _animator.SetBool("LockOn", LockOn);
-
-            if (!LockOn)
+            if(LockOn)
+            {
+                GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = lockTarget;
+                CinemachineCameraTarget.transform.localPosition = new Vector3(2f, 0.22f, 0f);
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(20f, 0f, 0f);
+            }
+            else
             {
                 GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = CinemachineCameraTarget.transform;
                 CinemachineCameraTarget.transform.localPosition = new Vector3(0, 1.22f, 0f);
                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(0, 0f, 0f);
             }
-            else
-            {
-                GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = target;
-                CinemachineCameraTarget.transform.localPosition = new Vector3(2f, 0.22f, 0f);
-                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(20f, 0f, 0f);
-            }
+            _animator.SetBool("LockOn", LockOn);
+
         }
 
         private void JumpAndGravity()

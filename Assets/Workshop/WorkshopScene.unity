@@ -914,6 +914,11 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 95081712}
+    - target: {fileID: 333687823159392571, guid: dbafc8e6a08c46f40973d8dfb31cd840,
+        type: 3}
+      propertyPath: lockOnTargetRadius
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4042558293172683269, guid: dbafc8e6a08c46f40973d8dfb31cd840,
         type: 3}
       propertyPath: m_RootOrder
@@ -1069,6 +1074,11 @@ PrefabInstance:
     - target: {fileID: 2499724477122208194, guid: b454b876b59c45a42b7e738bd0de3313,
         type: 3}
       propertyPath: m_Name
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499724477122208194, guid: b454b876b59c45a42b7e738bd0de3313,
+        type: 3}
+      propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 8958427868623128656, guid: b454b876b59c45a42b7e738bd0de3313,

@@ -41,8 +41,8 @@ public class ComboController : MonoBehaviour
     {
         isExecuting = true;
         isLocked = true;
-        var headFrames = combo.headFrames.x + combo.headFrames.y;
-        var bodyFrames = combo.bodyFrames.y - combo.bodyFrames.x;
+        var headFrames = combo.headFrames;
+        var bodyFrames = combo.bodyFrames;
         headFrames += combo.frameOffset;
         bodyFrames += combo.frameOffset;
         while (headFrames-- > 0)

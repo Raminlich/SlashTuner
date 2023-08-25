@@ -30,9 +30,9 @@ public class PlayerCombatController : MonoBehaviour
         thirdPersonController.SetPlayerState(CharacterState.Attack);
         if (!comboController.IsBusy())
         {
-            if (attackCombo < 2)
+            if (attackCombo < comboData.comboList.Count)
             {
-                comboController.AddCombo(comboData.combo[attackCombo]);
+                comboController.AddCombo(comboData.comboList[attackCombo]);
                 attackCombo++;
                 animator.SetBool("Attack", true);
                 animator.SetInteger("AttackCombo", attackCombo);

@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ComboData",menuName = "ComboData")]
 public class ComboData : ScriptableObject
 {
-    public List<AttackCombo> combo;
+    public List<AttackCombo> comboList;
 }

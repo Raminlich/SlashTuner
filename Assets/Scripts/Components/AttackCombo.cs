@@ -5,9 +5,9 @@ using UnityEngine;
 [Serializable]
 public class AttackCombo
 {
-    public Vector2Int headFrames;
-    public Vector2Int bodyFrames;
+    public int headFrames;
+    public int bodyFrames;
     public int frameOffset;
     public int damageFrame;
-    public int totalFrames { get { return bodyFrames.y; } private set { } }
+    public int totalFrames { get { return bodyFrames + headFrames; } private set { } }
 }

@@ -16,12 +16,15 @@ MonoBehaviour:
   - headFrames: 30
     bodyFrames: 20
     frameOffset: 10
-    damageFrame: 0
-  - headFrames: 30
+    damageFrame: 30
+    damageAmount: 10
+  - headFrames: 20
     bodyFrames: 20
     frameOffset: 10
-    damageFrame: 0
+    damageFrame: 30
+    damageAmount: 20
   - headFrames: 30
     bodyFrames: 20
     frameOffset: 20
-    damageFrame: 0
+    damageFrame: 30
+    damageAmount: 30

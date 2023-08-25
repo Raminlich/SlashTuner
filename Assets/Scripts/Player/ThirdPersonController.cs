@@ -12,6 +12,15 @@ namespace StarterAssets
         [SerializeField] private bool LockOn;
         [SerializeField] private float lockOnTargetRadius;
 
+        [Header("Dodge Settings")]
+        [SerializeField] private float dodgeSpeed;
+        [SerializeField] private int dodgeFrames;
+        [SerializeField] private AnimationCurve dodgeSpeedCurve;
+        [SerializeField] private float dodgeDelay;
+
+        private float currentSpeed;
+
+
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
@@ -113,7 +122,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
                 return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
-				return false;
+                return false;
 #endif
             }
         }
@@ -135,10 +144,10 @@ namespace StarterAssets
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<PlayerInputs>();
-#if ENABLE_INPUT_SYSTEM 
+#if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
 #else
-			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
+            Debug.LogError("Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
             AssignAnimationIDs();
@@ -152,7 +161,32 @@ namespace StarterAssets
 
         private void Dodge()
         {
-            _animator.SetTrigger("Dodge");
+            if (state == CharacterState.Dodge) return;
+            print("Dodging...");
+            GameplayHelper gameplayHelper = new GameplayHelper();
+            if (LockOn)
+            {
+                var pos = transform.TransformDirection(new Vector3(_input.move.x, 0, _input.move.y));
+                StartCoroutine(gameplayHelper.FramedAction(
+                    dodgeFrames,
+                    () => { BasicPush(dodgeSpeed,pos); },
+                    () => { SetPlayerState(CharacterState.Locomotion); currentSpeed = 0; }));
+            }
+            else
+            {
+                StartCoroutine(gameplayHelper.FramedAction(
+                    dodgeFrames,
+                    () => BasicPush(dodgeSpeed,transform.forward),
+                    () => { SetPlayerState(CharacterState.Locomotion); currentSpeed = 0; }));
+            }
+            SetPlayerState(CharacterState.Dodge);
+        }
+
+        private void BasicPush(float speed,Vector3 direction)
+        {
+            currentSpeed = Mathf.MoveTowards(currentSpeed, 1, speed * Time.deltaTime);
+            var lerpPos = Vector3.Lerp(Vector3.zero, direction, dodgeSpeedCurve.Evaluate(currentSpeed));
+            _controller.Move(lerpPos);
         }
 
         private void Update()
@@ -317,7 +351,7 @@ namespace StarterAssets
             lockTarget = GameplayUtility.SphereOverlapClosestObject(transform, lockOnTargetRadius, "Enemy");
             if (lockTarget == null) return;
             LockOn = !LockOn;
-            if(LockOn)
+            if (LockOn)
             {
                 GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = lockTarget;
                 CinemachineCameraTarget.transform.localPosition = new Vector3(2f, 0.22f, 0f);

@@ -3,12 +3,10 @@ using UnityEngine.AI;
 
 public abstract class BaseEnemy : MonoBehaviour
 {
-    public int health;
     public float moveSpeed;
     public float range;
-    public int damage;
     public float attackSpeed;
-    public float stunDuaration;
+    public float stunDuration;
     [Range(0, 1)]
     public float RotationSmoothTime;
 
@@ -39,12 +37,6 @@ public abstract class BaseEnemy : MonoBehaviour
         return distance <= range;
     }
 
-    public void GetDamage(int damage)
-    {
-        health -= damage;
-        CheckHealth();
-    }
-
     public bool IsPlayerWithinRadar()
     {
         Vector3 direction = target.transform.position - transform.position;
@@ -71,15 +63,6 @@ public abstract class BaseEnemy : MonoBehaviour
         var rotationScaleValue = Vector3.Scale(lookAtRotation, new Vector3(0, 1, 0));
         var rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, rotationScaleValue.y, ref rotationVelocity, RotationSmoothTime);
         transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-    }
-
-
-    protected virtual void CheckHealth()
-    {
-        if (health <= 0)
-        {
-            Destroy(gameObject);
-        }
     }
 
     protected abstract void Attack();

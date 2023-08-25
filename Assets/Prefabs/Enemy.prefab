@@ -13,9 +13,11 @@ GameObject:
   - component: {fileID: 6325066297362075647}
   - component: {fileID: 6445944855167654374}
   - component: {fileID: 4473246124678657012}
+  - component: {fileID: 356243769717324081}
+  - component: {fileID: 7442585371331380179}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35,7 +37,7 @@ Transform:
   - {fileID: 1007273100351174544}
   - {fileID: 3779074041262683140}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &7247063105497811818
 CapsuleCollider:
@@ -56,7 +58,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.78
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -103,7 +105,7 @@ MonoBehaviour:
   RotationSmoothTime: 0.4
   sphereOverlapOrigin: {fileID: 3779074041262683140}
   attackFrame: 240
-  damageFrame: 60
+  damageFrame: 70
 --- !u!95 &4473246124678657012
 Animator:
   serializedVersion: 5
@@ -125,6 +127,31 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &356243769717324081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2499724477122208194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd668b854583fdb4b852274a990c5411, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 100
+--- !u!114 &7442585371331380179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2499724477122208194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97d7bfe9df091dd4696588076bfd2734, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3527232447056282027
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,8 +179,8 @@ Transform:
   m_GameObject: {fileID: 3527232447056282027}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1007273100351174544}
   m_RootOrder: -1
@@ -186,7 +213,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: b366baba1046b8845bd518aaa1603646, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -302,7 +329,6 @@ GameObject:
   - component: {fileID: 7376185988878588332}
   - component: {fileID: 4382585211872504235}
   - component: {fileID: 2488792203364472205}
-  - component: {fileID: 4304682237777358117}
   m_Layer: 0
   m_Name: Face
   m_TagString: Untagged
@@ -318,8 +344,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6745227205782207474}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0117, y: 0.503, z: 0.327}
-  m_LocalScale: {x: 0.7431135, y: 0.2089, z: 0.6376}
+  m_LocalPosition: {x: 0.003, y: 0.503, z: 0.179}
+  m_LocalScale: {x: 0.5663268, y: 0.2089, z: 0.6376}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1007273100351174544}
@@ -375,27 +401,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &4304682237777358117
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6745227205782207474}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7758576094700710284
 GameObject:
   m_ObjectHideFlags: 0

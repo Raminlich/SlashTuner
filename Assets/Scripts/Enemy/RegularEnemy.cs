@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEditor;
 using UnityEngine;
 
 public class RegularEnemy : BaseEnemy
@@ -34,7 +33,7 @@ public class RegularEnemy : BaseEnemy
 
     public IEnumerator StunCheck()
     {
-        yield return new WaitForSeconds(stunDuaration);
+        yield return new WaitForSeconds(stunDuration);
         agent.enabled = true;
         rigidbody.isKinematic = true;
     }
@@ -52,12 +51,13 @@ public class RegularEnemy : BaseEnemy
 
     private void DoDamage()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(sphereOverlapOrigin.transform.position, .3f);
+        Collider[] hitColliders = Physics.OverlapSphere(sphereOverlapOrigin.position, .3f);
         foreach (Collider collider in hitColliders)
         {
             if (collider.gameObject.CompareTag("Player"))
             {
                 print("Damaging the player....");
+                collider.GetComponent<HealthController>().TakeDamage(20);
             }
         }
     }

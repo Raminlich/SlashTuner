@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameplayHelper
@@ -13,11 +14,12 @@ public class GameplayHelper
         {
             action?.Invoke();
             frameInterval--;
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForEndOfFrameUnit();
         }
         callback?.Invoke();
         Debug.Log("Action is Done");
     }
+
 
     public int GetCurrentInterval()
     {

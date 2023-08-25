@@ -23,6 +23,7 @@ public class PlayerCombatController : MonoBehaviour
         thirdPersonController = GetComponent<ThirdPersonController>();
         inputs.attackAction += OnPlayerAttack;
         comboController.SetFinalAction(OnPlayerAttackFinished);
+        comboController.SetDamageAction(DoDamage);
     }
 
     private void OnPlayerAttack()
@@ -51,13 +52,14 @@ public class PlayerCombatController : MonoBehaviour
 
     private void DoDamage()
     {
+        print("Trying to do damage...");
         Collider[] hitColliders = Physics.OverlapSphere(sphereOverlapOrigin.position, .3f);
         foreach (Collider collider in hitColliders)
         {
             if (collider.gameObject.CompareTag("Enemy"))
             {
                 print("Damaging the Enemy....");
-                collider.GetComponent<HealthController>().TakeDamage(10);
+                collider.GetComponent<HealthController>().TakeDamage(comboController.GetComboDamage());
             }
         }
     }

@@ -96,12 +96,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efa318e2bc4daaf4b8de85366eb2e325, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
   moveSpeed: 4
   range: 2
-  damage: 2
   attackSpeed: 1
-  stunDuaration: 0
+  stunDuration: 0
   RotationSmoothTime: 0.4
   sphereOverlapOrigin: {fileID: 3779074041262683140}
   attackFrame: 240

@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: PlayerCombo
   m_EditorClassIdentifier: 
   combo:
-  - headFrames: {x: 0, y: 100}
-    bodyFrames: {x: 100, y: 150}
+  - headFrames: {x: 0, y: 10}
+    bodyFrames: {x: 10, y: 50}
+    frameOffset: 30
     damageFrame: 30
-  - headFrames: {x: 0, y: 0}
-    bodyFrames: {x: 0, y: 0}
+  - headFrames: {x: 0, y: 10}
+    bodyFrames: {x: 10, y: 50}
+    frameOffset: 0
     damageFrame: 40

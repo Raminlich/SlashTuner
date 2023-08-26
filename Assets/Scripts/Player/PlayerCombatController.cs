@@ -28,6 +28,7 @@ public class PlayerCombatController : MonoBehaviour
 
     private void OnPlayerAttack()
     {
+        if (thirdPersonController.cameraState == LocomotionState.Free) return;
         thirdPersonController.SetPlayerState(CharacterState.Attack);
         if (!comboController.IsBusy())
         {
@@ -39,7 +40,6 @@ public class PlayerCombatController : MonoBehaviour
                 animator.SetInteger("AttackCombo", attackCombo);
             }
         }
-
     }
 
     private void OnPlayerAttackFinished()
@@ -78,5 +78,6 @@ public class PlayerCombatController : MonoBehaviour
     private void Update()
     {
         currentAttackFrames = gameplayHelper.GetCurrentInterval();
+        
     }
 }

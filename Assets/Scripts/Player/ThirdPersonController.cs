@@ -9,8 +9,10 @@ namespace StarterAssets
     public class ThirdPersonController : MonoBehaviour
     {
         [SerializeField] private CharacterState state;
+        public LocomotionState cameraState;
         [SerializeField] private bool LockOn;
         [SerializeField] private float lockOnTargetRadius;
+        public Vector2 lookTest;
 
         [Header("Dodge Settings")]
         [SerializeField] private float dodgeSpeed;
@@ -196,6 +198,15 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+            WeaponStance();
+        }
+
+        private void WeaponStance()
+        {
+            if (!LockOn) return;
+            lookTest = new Vector2(_input.stanceLook.normalized.x, _input.look.normalized.y);
+            _animator.SetFloat("StanceX", lookTest.x);
+            _animator.SetFloat("StanceY", lookTest.y);
         }
 
         private void LateUpdate()
@@ -353,12 +364,15 @@ namespace StarterAssets
             LockOn = !LockOn;
             if (LockOn)
             {
+                cameraState = LocomotionState.Locked;
                 GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = lockTarget;
                 CinemachineCameraTarget.transform.localPosition = new Vector3(2f, 0.22f, 0f);
                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(20f, 0f, 0f);
+
             }
             else
             {
+                cameraState = LocomotionState.Free;
                 GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = CinemachineCameraTarget.transform;
                 CinemachineCameraTarget.transform.localPosition = new Vector3(0, 1.22f, 0f);
                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(0, 0f, 0f);

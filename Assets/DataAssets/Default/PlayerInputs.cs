@@ -6,6 +6,7 @@ public class PlayerInputs : MonoBehaviour
 {
     public Vector2 move;
     public Vector2 look;
+    public Vector2 stanceLook;
     public bool jump;
     public bool sprint;
     public Action attackAction;
@@ -30,6 +31,10 @@ public class PlayerInputs : MonoBehaviour
         }
     }
 
+    public void OnStancePointer(InputValue value)
+    {
+        StancePointerInput(value.Get<Vector2>());
+    }
 
     public void OnJump(InputValue value)
     {
@@ -81,6 +86,11 @@ public class PlayerInputs : MonoBehaviour
     public void LookInput(Vector2 newLookDirection)
     {
         look = newLookDirection;
+    }
+
+    public void StancePointerInput(Vector2 newStance)
+    {
+        stanceLook = newStance;
     }
 
     public void JumpInput(bool newJumpState)

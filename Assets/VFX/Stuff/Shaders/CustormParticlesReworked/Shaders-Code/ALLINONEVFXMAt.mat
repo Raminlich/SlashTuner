@@ -8,11 +8,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ALLINONEVFXMAt
-  m_Shader: {fileID: -6465566751694194690, guid: 0632fd1479ae26948a43f971329ea675, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 0632fd1479ae26948a43f971329ea675,
+    type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DISTORTIONTYPE_FROMTEXTURE
+  - _ENABLE_FOG_ON_TRANSPARENT
   - _GRADIENTTYPE_GRADIENT
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords:
@@ -28,6 +30,9 @@ Material:
     RenderType: Transparent
   disabledShaderPasses:
   - DepthOnly
+  - TransparentDepthPrepass
+  - TransparentDepthPostpass
+  - TransparentBackface
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -117,7 +122,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampTest:
-        m_Texture: {fileID: -7245287855182351327, guid: fa611365e37889b429837245141ddb17, type: 2}
+        m_Texture: {fileID: -7245287855182351327, guid: fa611365e37889b429837245141ddb17,
+          type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampTexture:
@@ -125,7 +131,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Ramp_Texture__GRADIENTTYPE_TEXTURE:
-        m_Texture: {fileID: 28210150447550732, guid: a3de8fe9d00f8094abaa5f237248e93c, type: 2}
+        m_Texture: {fileID: 28210150447550732, guid: a3de8fe9d00f8094abaa5f237248e93c,
+          type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape1MaskTex:
@@ -157,7 +164,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Simple_Texture__SOME_ENUM_TEXTURE:
-        m_Texture: {fileID: -7245287855182351327, guid: fa611365e37889b429837245141ddb17, type: 2}
+        m_Texture: {fileID: -7245287855182351327, guid: fa611365e37889b429837245141ddb17,
+          type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -187,18 +195,23 @@ Material:
     m_Ints: []
     m_Floats:
     - _: 0
+    - _AddPrecomputedVelocity: 0
     - _Alpha: 1
     - _AlphaClip: 0
+    - _AlphaCutoffEnable: 0
     - _AlphaCutoffValue: 0.25
+    - _AlphaDstBlend: 10
     - _AlphaFadeAmount: -0.1
     - _AlphaFadePow: 1
     - _AlphaFadeSmooth: 0.075
     - _AlphaMaskPower: 1
     - _AlphaMaskTiling: 0
+    - _AlphaSrcBlend: 1
     - _AlphaStepMax: 0.075
     - _AlphaStepMin: 0
     - _AlphaToMask: 0
     - _Blend: 0
+    - _BlendMode: 0
     - _BumpScale: 1
     - _CamDistFadeStepMax: 100
     - _CamDistFadeStepMin: 0
@@ -215,7 +228,10 @@ Material:
     - _Color_1__SOME_ENUM_KEYWORD_COLORS: 0
     - _Color_2__SOME_ENUM_COLORS: 0
     - _Color_2__SOME_ENUM_KEYWORD_COLORS: 0
+    - _ConservativeDepthOffsetEnable: 0
     - _Cull: 2
+    - _CullMode: 2
+    - _CullModeForward: 2
     - _CullingOption: 0
     - _Cutoff: 0.5
     - _DISTORTIONTYPE: 0
@@ -224,6 +240,7 @@ Material:
     - _DepthGlowDist: 0.5
     - _DepthGlowGlobal: 1
     - _DepthGlowPow: 1
+    - _DepthOffsetEnable: 0
     - _Depth_Blend: 0
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
@@ -235,9 +252,14 @@ Material:
     - _DistortionScrollXSpeed: 0
     - _DistortionScrollYSpeed: 0
     - _Distortion_Enabled: 0
+    - _DoubleSidedEnable: 0
+    - _DoubleSidedGIMode: 0
+    - _DoubleSidedNormalMode: 2
     - _DstBlend: 10
     - _DstMode: 10
     - _EditorDrawers: 60
+    - _EnableBlendModePreserveSpecularLighting: 0
+    - _EnableFogOnTransparent: 1
     - _EnvironmentReflections: 1
     - _FadeAmount: -0.1
     - _FadeBurnGlow: 5
@@ -275,6 +297,7 @@ Material:
     - _OffsetSh1: 1
     - _OffsetSh2: 1
     - _OffsetSh3: 1
+    - _OpaqueCullMode: 2
     - _Parallax: 0.005
     - _PixelateSize: 32
     - _Polarity: 0
@@ -285,6 +308,7 @@ Material:
     - _RandomSh2Mult: 1
     - _RandomSh3Mult: 1
     - _ReceiveShadows: 1
+    - _RenderQueueType: 3
     - _RenderingMode: 0
     - _RimAddAmount: 1
     - _RimBias: 0
@@ -346,9 +370,18 @@ Material:
     - _SoftFactor: 0.5
     - _Soft_Particles_Enabled: 0
     - _SpecularHighlights: 1
-    - _SrcBlend: 5
+    - _SrcBlend: 1
     - _SrcMode: 5
+    - _StencilRef: 0
+    - _StencilRefDepth: 1
+    - _StencilRefDistortionVec: 4
+    - _StencilRefMV: 33
+    - _StencilWriteMask: 6
+    - _StencilWriteMaskDepth: 9
+    - _StencilWriteMaskDistortionVec: 4
+    - _StencilWriteMaskMV: 43
     - _Surface: 1
+    - _SurfaceType: 1
     - _TextureMultiplier: 1
     - _TextureORUI: 1
     - _TexturePower: 1
@@ -356,10 +389,18 @@ Material:
     - _TextureScrollYSpeed: 0
     - _TimingSeed: 0
     - _TrailWidthPower: 1
+    - _TransparentBackfaceEnable: 0
+    - _TransparentCullMode: 2
+    - _TransparentDepthPostpassEnable: 0
+    - _TransparentDepthPrepassEnable: 0
+    - _TransparentSortPriority: 0
+    - _TransparentWritingMotionVec: 0
+    - _TransparentZWrite: 0
     - _TwistUvAmount: 1
     - _TwistUvPosX: 0.5
     - _TwistUvPosY: 0.5
     - _TwistUvRadius: 0.75
+    - _UseShadowThreshold: 0
     - _VertOffsetAmount: 0.5
     - _VertOffsetPower: 1
     - _VertOffsetTexXSpeed: 0.1
@@ -371,7 +412,9 @@ Material:
     - _WaveY: 0.5
     - _WorkflowMode: 1
     - _ZTest: 4
+    - _ZTestDepthEqualForOpaque: 4
     - _ZTestMode: 4
+    - _ZTestTransparent: 4
     - _ZWrite: 0
     - _ZWriteControl: 0
     - __A_Header: 0
@@ -402,12 +445,14 @@ Material:
     - _ColorGradingLight: {r: 1, g: 1, b: 1, a: 1}
     - _ColorGradingMiddle: {r: 1, g: 1, b: 1, a: 1}
     - _DepthGlowColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _FadeBurnColor: {r: 1, g: 1, b: 0, a: 1}
     - _FrontFaceTint: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
     - _GradientColor1__GRADIENTTYPE_COLOR: {r: 0.3667519, g: 1, b: 0, a: 1}
-    - _GradientColor2__GRADIENTTYPE_COLOR: {r: 0.01886791, g: 0.01886791, b: 0.01886791, a: 1}
+    - _GradientColor2__GRADIENTTYPE_COLOR: {r: 0.01886791, g: 0.01886791, b: 0.01886791,
+        a: 1}
     - _HDRColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
     - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _NormalTiling__DISTORTIONTYPE_FROMNORMALS: {r: 1, g: 1, b: 0, a: 0}
@@ -425,6 +470,22 @@ Material:
     - _TilingPropertyMask: {r: 1, g: 1, b: 0, a: 0}
     - _UV_Offset: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+--- !u!114 &44790782353758641
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 13
+  hdPluginSubTargetMaterialVersions:
+    m_Keys: []
+    m_Values: 
 --- !u!114 &5682243287983410021
 MonoBehaviour:
   m_ObjectHideFlags: 11

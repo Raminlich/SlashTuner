@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: PlayerCombo
   m_EditorClassIdentifier: 
   comboList:
-  - headFrames: 30
+  - headFrames: 10
     bodyFrames: 20
     frameOffset: 10
     damageFrame: 30
     damageAmount: 10
-  - headFrames: 20
+  - headFrames: 0
     bodyFrames: 20
     frameOffset: 10
     damageFrame: 30
     damageAmount: 20
   - headFrames: 30
     bodyFrames: 20
-    frameOffset: 20
+    frameOffset: 10
     damageFrame: 30
     damageAmount: 30

@@ -13,6 +13,10 @@ namespace StarterAssets
         [SerializeField] private bool LockOn;
         [SerializeField] private float lockOnTargetRadius;
         public Vector2 lookTest;
+        private bool isStancing;
+        public float stanceMultiplier;
+        public float stanceThreshold;
+
 
         [Header("Dodge Settings")]
         [SerializeField] private float dodgeSpeed;
@@ -141,8 +145,8 @@ namespace StarterAssets
 
         private void Start()
         {
+            Cursor.visible = false;
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<PlayerInputs>();
@@ -171,20 +175,20 @@ namespace StarterAssets
                 var pos = transform.TransformDirection(new Vector3(_input.move.x, 0, _input.move.y));
                 StartCoroutine(gameplayHelper.FramedAction(
                     dodgeFrames,
-                    () => { BasicPush(dodgeSpeed,pos); },
+                    () => { BasicPush(dodgeSpeed, pos); },
                     () => { SetPlayerState(CharacterState.Locomotion); currentSpeed = 0; }));
             }
             else
             {
                 StartCoroutine(gameplayHelper.FramedAction(
                     dodgeFrames,
-                    () => BasicPush(dodgeSpeed,transform.forward),
+                    () => BasicPush(dodgeSpeed, transform.forward),
                     () => { SetPlayerState(CharacterState.Locomotion); currentSpeed = 0; }));
             }
             SetPlayerState(CharacterState.Dodge);
         }
 
-        private void BasicPush(float speed,Vector3 direction)
+        private void BasicPush(float speed, Vector3 direction)
         {
             currentSpeed = Mathf.MoveTowards(currentSpeed, 1, speed * Time.deltaTime);
             var lerpPos = Vector3.Lerp(Vector3.zero, direction, dodgeSpeedCurve.Evaluate(currentSpeed));
@@ -193,8 +197,9 @@ namespace StarterAssets
 
         private void Update()
         {
+            
             _hasAnimator = TryGetComponent(out _animator);
-
+            print(_input.stanceLook);
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -204,9 +209,25 @@ namespace StarterAssets
         private void WeaponStance()
         {
             if (!LockOn) return;
-            lookTest = new Vector2(_input.stanceLook.normalized.x, _input.look.normalized.y);
+
+            if(_input.stanceLook.sqrMagnitude > stanceThreshold)
+            {
+                lookTest += (_input.stanceLook) * stanceMultiplier;
+            }
+
+            lookTest.x = Mathf.Clamp(lookTest.x, -1, 1);
+            lookTest.y = Mathf.Clamp(lookTest.y, -1, 1);
+            print(lookTest);
+
+            //lookTest += (_input.stanceLook * stanceMultiplier);
+
             _animator.SetFloat("StanceX", lookTest.x);
             _animator.SetFloat("StanceY", lookTest.y);
+            if (isStancing)
+            {
+
+            }
+
         }
 
         private void LateUpdate()

@@ -12,6 +12,7 @@ public class PlayerInputs : MonoBehaviour
     public Action attackAction;
     public Action lockAction;
     public Action dodgeAction;
+    public Action stanceAction;
 
     public bool analogMovement;
 

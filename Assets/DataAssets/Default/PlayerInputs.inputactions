@@ -311,7 +311,7 @@
                 {
                     "name": "",
                     "id": "c845798f-34a6-4328-9abc-b372113c7d7f",
-                    "path": "<Pointer>/position",
+                    "path": "<Pointer>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",

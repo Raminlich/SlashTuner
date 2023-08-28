@@ -1,11 +1,16 @@
+using DG.Tweening;
 using StarterAssets;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.UIElements.Experimental;
 
 public class PlayerCombatController : MonoBehaviour
 {
     [SerializeField] private Transform sphereOverlapOrigin;
     [SerializeField] private ComboData comboData;
+    [SerializeField] private ParticleSystem weaponVFX;
     public int currentAttackFrames;
     private Animator animator;
     private PlayerInputs inputs;
@@ -13,6 +18,13 @@ public class PlayerCombatController : MonoBehaviour
     private int attackCombo;
     private GameplayHelper gameplayHelper;
     private ComboController comboController;
+    private float weaponDirX;
+    private float weaponDirY;
+    public float swingTime = 1f;
+    public Vector2 currentWeaponDirection;
+    public float stanceMultiplier;
+    public float stanceThreshold;
+    private Vector2 weaponTargetDir;
 
     void Start()
     {
@@ -26,20 +38,53 @@ public class PlayerCombatController : MonoBehaviour
         comboController.SetDamageAction(DoDamage);
     }
 
+    private void WeaponStance()
+    {
+        if (!thirdPersonController.LockOn) return;
+
+        if(inputs.stanceLook.sqrMagnitude > 0)
+        {
+            if (inputs.stanceLook.sqrMagnitude > stanceThreshold)
+            {
+                currentWeaponDirection += (inputs.stanceLook) * stanceMultiplier;
+            }
+
+            currentWeaponDirection.x = Mathf.Clamp(currentWeaponDirection.x, -1, 1);
+            currentWeaponDirection.y = Mathf.Clamp(currentWeaponDirection.y, -1, 1);
+
+            animator.SetFloat("StanceX", currentWeaponDirection.x);
+            animator.SetFloat("StanceY", currentWeaponDirection.y);
+        }
+
+
+
+    }
+
     private void OnPlayerAttack()
     {
-        if (thirdPersonController.cameraState == LocomotionState.Free) return;
+        if (thirdPersonController.cameraState == LocomotionState.Free || thirdPersonController.GetPlayerState() == CharacterState.Attack) return;
+        OnAttackStart();
         thirdPersonController.SetPlayerState(CharacterState.Attack);
-        if (!comboController.IsBusy())
+        var weaponDirection = currentWeaponDirection;
+        weaponTargetDir = new Vector2(weaponDirection.x, weaponDirection.y) * -1;
+        DOVirtual.Vector3(weaponDirection, weaponTargetDir, swingTime, (returnType) =>
         {
-            if (attackCombo < comboData.comboList.Count)
-            {
-                comboController.AddCombo(comboData.comboList[attackCombo]);
-                attackCombo++;
-                animator.SetBool("Attack", true);
-                animator.SetInteger("AttackCombo", attackCombo);
-            }
-        }
+            animator.SetFloat("StanceX", returnType.x);
+            animator.SetFloat("StanceY", returnType.y);
+        }).SetEase(Ease.OutCubic).onComplete += OnAttackEnd;
+
+    }
+
+    private void OnAttackStart()
+    {
+        weaponVFX.Play();
+    }
+
+    private void OnAttackEnd()
+    {
+        weaponVFX.Stop();
+        currentWeaponDirection = weaponTargetDir;
+        thirdPersonController.SetPlayerState(CharacterState.Locomotion);
     }
 
     private void OnPlayerAttackFinished()
@@ -78,6 +123,8 @@ public class PlayerCombatController : MonoBehaviour
     private void Update()
     {
         currentAttackFrames = gameplayHelper.GetCurrentInterval();
-        
+        WeaponStance();
     }
+
+
 }

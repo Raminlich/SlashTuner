@@ -9,7 +9,6 @@ public class GameplayHelper
     public IEnumerator FramedAction(int frames, Action action, Action callback = null)
     {
         frameInterval = frames;
-        Debug.Log($"Starting Action with {frameInterval} frames");
         while (frameInterval-- > 0)
         {
             action?.Invoke();
@@ -17,7 +16,6 @@ public class GameplayHelper
             yield return new WaitForEndOfFrameUnit();
         }
         callback?.Invoke();
-        Debug.Log("Action is Done");
     }
 
 

@@ -10,16 +10,15 @@ namespace StarterAssets
     {
         [SerializeField] private CharacterState state;
         public LocomotionState cameraState;
-        [SerializeField] private bool LockOn;
+        public bool LockOn;
         [SerializeField] private float lockOnTargetRadius;
-        public Vector2 lookTest;
-        private bool isStancing;
-        public float stanceMultiplier;
-        public float stanceThreshold;
+
 
 
         [Header("Dodge Settings")]
         [SerializeField] private float dodgeSpeed;
+        [SerializeField] private float lockedMovementSpeed = 5;
+
         [SerializeField] private int dodgeFrames;
         [SerializeField] private AnimationCurve dodgeSpeedCurve;
         [SerializeField] private float dodgeDelay;
@@ -145,7 +144,6 @@ namespace StarterAssets
 
         private void Start()
         {
-            Cursor.visible = false;
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
@@ -168,7 +166,6 @@ namespace StarterAssets
         private void Dodge()
         {
             if (state == CharacterState.Dodge) return;
-            print("Dodging...");
             GameplayHelper gameplayHelper = new GameplayHelper();
             if (LockOn)
             {
@@ -199,36 +196,12 @@ namespace StarterAssets
         {
             
             _hasAnimator = TryGetComponent(out _animator);
-            print(_input.stanceLook);
             JumpAndGravity();
             GroundedCheck();
             Move();
-            WeaponStance();
         }
 
-        private void WeaponStance()
-        {
-            if (!LockOn) return;
 
-            if(_input.stanceLook.sqrMagnitude > stanceThreshold)
-            {
-                lookTest += (_input.stanceLook) * stanceMultiplier;
-            }
-
-            lookTest.x = Mathf.Clamp(lookTest.x, -1, 1);
-            lookTest.y = Mathf.Clamp(lookTest.y, -1, 1);
-            print(lookTest);
-
-            //lookTest += (_input.stanceLook * stanceMultiplier);
-
-            _animator.SetFloat("StanceX", lookTest.x);
-            _animator.SetFloat("StanceY", lookTest.y);
-            if (isStancing)
-            {
-
-            }
-
-        }
 
         private void LateUpdate()
         {
@@ -360,7 +333,7 @@ namespace StarterAssets
             if (state == CharacterState.Locomotion)
             {
                 var moveDirection = transform.TransformDirection(new Vector3(_input.move.x, 0, _input.move.y));
-                _controller.Move(moveDirection * 2 * Time.deltaTime);
+                _controller.Move(moveDirection * lockedMovementSpeed * Time.deltaTime);
                 _animator.SetFloat("StrifeX", _input.move.x);
                 _animator.SetFloat("StrifeY", _input.move.y);
             }

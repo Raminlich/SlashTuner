@@ -47,7 +47,6 @@ public abstract class BaseEnemy : MonoBehaviour
         {
             if (aimHit.transform.tag == "Player")
             {
-                Debug.Log("Player found...");
                 return true;
             }
 

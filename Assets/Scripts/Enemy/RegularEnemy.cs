@@ -1,13 +1,17 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem.Android;
 
-public class RegularEnemy : BaseEnemy
+public class RegularEnemy : BaseEnemy, IStagger
 {
     public Transform sphereOverlapOrigin;
     private bool isAttacking;
     GameplayHelper gameplayHelper;
     public int attackFrame;
     public int damageFrame;
+    public int pushForce;
+    public Collider weaponCollider;
     private void Start()
     {
         gameplayHelper = new GameplayHelper();
@@ -46,6 +50,7 @@ public class RegularEnemy : BaseEnemy
             StartCoroutine(new GameplayHelper().FramedAction(damageFrame, null, DoDamage));
             isAttacking = true;
             animator.SetTrigger("Attack");
+            weaponCollider.enabled = true;
         }
     }
 
@@ -61,9 +66,37 @@ public class RegularEnemy : BaseEnemy
             }
         }
     }
+
+    public void BasicAgentPush()
+    {
+        agent.enabled = false;
+        StartCoroutine(new GameplayHelper().FramedAction(60, BasicPush, RegainControl));
+    }
+
+    private void BasicPush()
+    {
+        transform.Translate(Vector3.forward * -pushForce * Time.deltaTime);
+    }
+
+    private void RegainControl()
+    {
+        agent.enabled = true;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(sphereOverlapOrigin.transform.position, .3f);
+    }
+
+    public void WeaponStagger()
+    {
+        BasicAgentPush();
+        animator.SetTrigger("Stagger");
+    }
+
+    public void DamageStagger()
+    {
+        print("Enemy damage stagger");
     }
 }

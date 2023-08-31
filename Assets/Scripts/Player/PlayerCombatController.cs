@@ -1,12 +1,8 @@
 using DG.Tweening;
 using StarterAssets;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.UIElements.Experimental;
 
-public class PlayerCombatController : MonoBehaviour
+public class PlayerCombatController : MonoBehaviour, IStagger
 {
     [SerializeField] private Transform sphereOverlapOrigin;
     [SerializeField] private ComboData comboData;
@@ -24,10 +20,13 @@ public class PlayerCombatController : MonoBehaviour
     public Vector2 currentWeaponDirection;
     public float stanceMultiplier;
     public float stanceThreshold;
+    public Collider weaponCollider;
     private Vector2 weaponTargetDir;
+    public CinemachineCameraShaker CameraShaker;
 
     void Start()
     {
+        //Time.timeScale = .4f;
         gameplayHelper = new GameplayHelper();
         comboController = GetComponent<ComboController>();
         animator = GetComponent<Animator>();
@@ -42,7 +41,7 @@ public class PlayerCombatController : MonoBehaviour
     {
         if (!thirdPersonController.LockOn) return;
 
-        if(inputs.stanceLook.sqrMagnitude > 0)
+        if (inputs.stanceLook.sqrMagnitude > 0)
         {
             if (inputs.stanceLook.sqrMagnitude > stanceThreshold)
             {
@@ -78,10 +77,12 @@ public class PlayerCombatController : MonoBehaviour
     private void OnAttackStart()
     {
         weaponVFX.Play();
+        weaponCollider.enabled = true;
     }
 
     private void OnAttackEnd()
     {
+        weaponCollider.enabled = false;
         weaponVFX.Stop();
         currentWeaponDirection = weaponTargetDir;
         thirdPersonController.SetPlayerState(CharacterState.Locomotion);
@@ -126,5 +127,18 @@ public class PlayerCombatController : MonoBehaviour
         WeaponStance();
     }
 
+    public void WeaponStagger()
+    {
+        OnWeaponCollision();
+    }
 
+    public void DamageStagger()
+    {
+        print("Player damage stagger");
+    }
+
+    void OnWeaponCollision()
+    {
+        CameraShaker.ShakeCamera(.2f);
+    }
 }

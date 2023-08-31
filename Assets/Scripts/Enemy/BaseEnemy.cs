@@ -28,13 +28,19 @@ public abstract class BaseEnemy : MonoBehaviour
 
     protected virtual void GetInRange()
     {
-        agent.SetDestination(target.transform.position);
+        if (agent.enabled)
+            agent.SetDestination(target.transform.position);
     }
 
     protected virtual bool IsWithinRange()
     {
         var distance = Vector3.Distance(target.transform.position, transform.position);
         return distance <= range;
+    }
+
+    public virtual void Stagger()
+    {
+        animator.SetTrigger("Stagger");
     }
 
     public bool IsPlayerWithinRadar()

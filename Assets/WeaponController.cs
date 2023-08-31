@@ -1,24 +1,23 @@
-using Cinemachine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
-    public CinemachineCameraShaker CameraShaker;
-   
-    // Create a Cinemachine Virtual Camera.
-
 
     private void OnTriggerEnter(Collider other)
     {
-        OnWeaponCollision();
-        print(other.name);
+        GetComponent<Collider>().enabled = false;
+        if (other.gameObject.CompareTag("Weapon"))
+        {
+            print("Weapon collided");
+            var character = other.GetComponentInParent<IStagger>();
+            character.WeaponStagger();
+        }
+        else if(other.CompareTag("Enemy") || other.CompareTag("Player"))
+        {
+            var character = other.GetComponentInParent<IStagger>();
+            character.DamageStagger();
+        }
     }
 
-    void OnWeaponCollision()
-    {
 
-        CameraShaker.ShakeCamera(.2f);
-    }
 }

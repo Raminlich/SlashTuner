@@ -23,7 +23,7 @@ public abstract class BaseEnemy : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         agent.speed = moveSpeed;
-        agent.stoppingDistance = range - 0.3f;
+        agent.stoppingDistance = range - 0.5f;
     }
 
     protected virtual void GetInRange()

@@ -1,8 +1,9 @@
 ﻿using Cinemachine;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using UnityEngine.UI;
 
 namespace StarterAssets
 {
@@ -22,8 +23,12 @@ namespace StarterAssets
         [SerializeField] private int dodgeFrames;
         [SerializeField] private AnimationCurve dodgeSpeedCurve;
         [SerializeField] private float dodgeDelay;
+        [SerializeField] private Image selectedTarget;
+        [SerializeField] private Image targetHealth;
 
         private float currentSpeed;
+        private List<Collider> allAvailableTargets = new List<Collider>();
+        private int currentTargetIndex = 0;
 
 
         [Header("Player")]
@@ -161,6 +166,7 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
             _input.lockAction += LockOnTarget;
             _input.dodgeAction += Dodge;
+            _input.nextTarget += NextClosestTarget;
         }
 
         private void Dodge()
@@ -194,11 +200,12 @@ namespace StarterAssets
 
         private void Update()
         {
-            
+
             _hasAnimator = TryGetComponent(out _animator);
             JumpAndGravity();
             GroundedCheck();
             Move();
+            GetTargetHealth();
         }
 
 
@@ -344,10 +351,56 @@ namespace StarterAssets
 
         private void LockRotation()
         {
-            Vector3 lookAtRotation = Quaternion.LookRotation(lockTarget.position - transform.position).eulerAngles;
-            var rotationScaleValue = Vector3.Scale(lookAtRotation, new Vector3(0, 1, 0));
-            var rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, rotationScaleValue.y, ref _rotationVelocity, RotationSmoothTime);
-            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            if (lockTarget != null)
+            {
+                selectedTarget.gameObject.SetActive(true);
+                allAvailableTargets = GameplayUtility.SphereOverlapAllObject(transform, lockOnTargetRadius, "Enemy");
+                Vector3 lookAtRotation = Quaternion.LookRotation(lockTarget.position - transform.position).eulerAngles;
+                var rotationScaleValue = Vector3.Scale(lookAtRotation, new Vector3(0, 1, 0));
+                var rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, rotationScaleValue.y, ref _rotationVelocity, RotationSmoothTime);
+                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            }
+            else
+            {
+                GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = CinemachineCameraTarget.transform;
+                CinemachineCameraTarget.transform.localPosition = new Vector3(0, 1.22f, 0f);
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(0, 0f, 0f);
+                _animator.SetBool("LockOn", LockOn);
+                selectedTarget.gameObject.SetActive(false);
+                targetHealth.transform.parent.gameObject.SetActive(false);
+                //Try to get another Object?
+                if (LockOn)
+                    NextClosestTarget();
+            }
+
+
+        }
+
+        private void GetTargetHealth()
+        {
+            if (!LockOn) return;
+            targetHealth.transform.parent.gameObject.SetActive(true);
+            targetHealth.fillAmount = lockTarget.GetComponent<EntityStats>().Health / 100;
+        }
+
+        private void NextClosestTarget()
+        {
+            allAvailableTargets.RemoveAll(x => x == null);
+            if(allAvailableTargets.Count == 0)
+            {
+                cameraState = LocomotionState.Free;
+                LockOn = false;
+                return;
+            }
+
+            if (currentTargetIndex >= allAvailableTargets.Count - 1)
+                currentTargetIndex = 0;
+            else
+                currentTargetIndex++;
+            lockTarget = allAvailableTargets[currentTargetIndex].transform;
+            GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = lockTarget;
+            CinemachineCameraTarget.transform.localPosition = new Vector3(2f, 0.22f, 0f);
+            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(20f, 0f, 0f);
 
         }
 

@@ -13,6 +13,7 @@ public class PlayerInputs : MonoBehaviour
     public Action lockAction;
     public Action dodgeAction;
     public Action stanceAction;
+    public Action nextTarget;
 
     public bool analogMovement;
 
@@ -60,6 +61,12 @@ public class PlayerInputs : MonoBehaviour
     public void OnDodge()
     {
         DodgeInput();
+    }
+
+    public void OnNextClosestTarget()
+    {
+        print("Finding next target");
+        nextTarget?.Invoke();
     }
 
     //----------------------------------------------------------------------

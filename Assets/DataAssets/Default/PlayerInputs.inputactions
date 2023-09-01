@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "NextClosestTarget",
+                    "type": "Button",
+                    "id": "e88dc35e-3619-4785-8446-4b4f9fc97750",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -316,6 +325,17 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "StancePointer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3cb45ee7-dd43-4cc1-80a6-ffd2821bb2cf",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "NextClosestTarget",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

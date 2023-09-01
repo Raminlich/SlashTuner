@@ -47,10 +47,10 @@ public class RegularEnemy : BaseEnemy, IStagger
         if (!isAttacking)
         {
             StartCoroutine(gameplayHelper.FramedAction(attackFrame, null, () => isAttacking = false));
-            StartCoroutine(new GameplayHelper().FramedAction(damageFrame, null, DoDamage));
+            StartCoroutine(new GameplayHelper().FramedAction(damageFrame, null, () => weaponCollider.enabled = true));
+            //StartCoroutine(new GameplayHelper().FramedAction(damageFrame, null, DoDamage));
             isAttacking = true;
             animator.SetTrigger("Attack");
-            weaponCollider.enabled = true;
         }
     }
 

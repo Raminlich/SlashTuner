@@ -1,6 +1,7 @@
 using DG.Tweening;
 using StarterAssets;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCombatController : MonoBehaviour, IStagger
 {
@@ -23,6 +24,8 @@ public class PlayerCombatController : MonoBehaviour, IStagger
     public Collider weaponCollider;
     private Vector2 weaponTargetDir;
     public CinemachineCameraShaker CameraShaker;
+    public Image healthImage;
+    private float maxHealth;
 
     void Start()
     {
@@ -35,6 +38,7 @@ public class PlayerCombatController : MonoBehaviour, IStagger
         inputs.attackAction += OnPlayerAttack;
         comboController.SetFinalAction(OnPlayerAttackFinished);
         comboController.SetDamageAction(DoDamage);
+        maxHealth = GetComponent<EntityStats>().Health;
     }
 
     private void WeaponStance()
@@ -134,7 +138,11 @@ public class PlayerCombatController : MonoBehaviour, IStagger
 
     public void DamageStagger()
     {
+        animator.SetTrigger("DamageStagger");
         print("Player damage stagger");
+        //Health Ui
+        var healthValue = GetComponent<EntityStats>().Health;
+        healthImage.DOFillAmount(healthValue/maxHealth,.5f);
     }
 
     void OnWeaponCollision()

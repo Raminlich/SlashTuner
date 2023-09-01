@@ -23,6 +23,7 @@ public class HealthController : MonoBehaviour
 
     private void Death()
     {
-        print("Died");
+        print($"{transform.name} Died");
+        Destroy(gameObject);
     }
 }

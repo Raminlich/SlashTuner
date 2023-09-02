@@ -12,6 +12,7 @@ public class RegularEnemy : BaseEnemy, IStagger
     public int damageFrame;
     public int pushForce;
     public Collider weaponCollider;
+    public ParticleSystem attackIndicator;
     private void Start()
     {
         gameplayHelper = new GameplayHelper();
@@ -47,7 +48,7 @@ public class RegularEnemy : BaseEnemy, IStagger
         if (!isAttacking)
         {
             StartCoroutine(gameplayHelper.FramedAction(attackFrame, null, () => isAttacking = false));
-            StartCoroutine(new GameplayHelper().FramedAction(damageFrame, null, () => weaponCollider.enabled = true));
+            //StartCoroutine(new GameplayHelper().FramedAction(damageFrame, null, () => weaponCollider.enabled = true));
             //StartCoroutine(new GameplayHelper().FramedAction(damageFrame, null, DoDamage));
             isAttacking = true;
             animator.SetTrigger("Attack");
@@ -98,5 +99,20 @@ public class RegularEnemy : BaseEnemy, IStagger
     public void DamageStagger()
     {
         print("Enemy damage stagger");
+    }
+    
+    public void IndicatorVFX()
+    {
+        attackIndicator.Play();
+    }
+
+    public void EnableWeaponCollider()
+    {
+        weaponCollider.enabled = true;
+    }
+
+    public void DisableWeaponCollider()
+    {
+        weaponCollider.enabled = false;
     }
 }

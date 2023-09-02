@@ -13,6 +13,8 @@ namespace StarterAssets
         public LocomotionState cameraState;
         public bool LockOn;
         [SerializeField] private float lockOnTargetRadius;
+        [SerializeField] private Vector3 lockOffsetPosition;
+        [SerializeField] private Vector3 lockOffsetRotation;
 
 
 
@@ -206,6 +208,7 @@ namespace StarterAssets
             GroundedCheck();
             Move();
             GetTargetHealth();
+            
         }
 
 
@@ -214,6 +217,8 @@ namespace StarterAssets
         {
             if (!LockOn)
                 CameraRotation();
+            //CinemachineCameraTarget.transform.position = lockOffsetPosition;
+            //CinemachineCameraTarget.transform.rotation = Quaternion.Euler(lockOffsetRotation.x, lockOffsetRotation.y, lockOffsetRotation.z);
         }
 
         private void AssignAnimationIDs()
@@ -399,8 +404,8 @@ namespace StarterAssets
                 currentTargetIndex++;
             lockTarget = allAvailableTargets[currentTargetIndex].transform;
             GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = lockTarget;
-            CinemachineCameraTarget.transform.localPosition = new Vector3(2f, 0.22f, 0f);
-            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(20f, 0f, 0f);
+            CinemachineCameraTarget.transform.localPosition = lockOffsetPosition;
+            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(lockOffsetRotation.x,lockOffsetRotation.y,lockOffsetRotation.z);
 
         }
 
@@ -413,8 +418,8 @@ namespace StarterAssets
             {
                 cameraState = LocomotionState.Locked;
                 GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = lockTarget;
-                CinemachineCameraTarget.transform.localPosition = new Vector3(2f, 0.22f, 0f);
-                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(20f, 0f, 0f);
+                CinemachineCameraTarget.transform.localPosition = lockOffsetPosition;
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(lockOffsetRotation.x, lockOffsetRotation.y, lockOffsetRotation.z);
 
             }
             else

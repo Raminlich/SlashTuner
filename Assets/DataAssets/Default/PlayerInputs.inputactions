@@ -93,7 +93,25 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ChangeTarget",
+                    "type": "Value",
+                    "id": "0e568e0d-63f0-4f6c-9991-b8328aeadb95",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PointerTarget",
+                    "type": "Value",
+                    "id": "547a5f56-c6b3-4688-b0f1-266f87172595",
+                    "expectedControlType": "Vector2",
+                    "processors": "NormalizeVector2",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -336,6 +354,28 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "NextClosestTarget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d4f38845-eccd-41ac-b7c9-c1948a92c788",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "ChangeTarget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "954b800e-2e76-425d-acf8-c4c493fcd4d4",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "PointerTarget",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

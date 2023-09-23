@@ -1,6 +1,8 @@
 ﻿using Cinemachine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -15,6 +17,12 @@ namespace StarterAssets
         [SerializeField] private float lockOnTargetRadius;
         [SerializeField] private Vector3 lockOffsetPosition;
         [SerializeField] private Vector3 lockOffsetRotation;
+        [SerializeField] private bool isChangingTarget;
+        [SerializeField] private GameObject rightTargetCol;
+        [SerializeField] private GameObject leftTargetCol;
+        [SerializeField] private Vector2 changeTargetValues;
+        [SerializeField] private float changeTargetThreshold;
+        [SerializeField] private float targetLockLerp;
 
 
 
@@ -30,7 +38,9 @@ namespace StarterAssets
 
         private float currentSpeed;
         private List<Collider> allAvailableTargets = new List<Collider>();
-        private int currentTargetIndex = 0;
+        public List<Collider> allLeftTargets = new List<Collider>();
+        public List<Collider> allRightTargets = new List<Collider>();
+        public int currentTargetIndex = 0;
 
 
         [Header("Player")]
@@ -125,7 +135,7 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
-        private Transform lockTarget;
+        public Transform lockTarget;
 
         private bool IsCurrentDeviceMouse
         {
@@ -169,6 +179,7 @@ namespace StarterAssets
             _input.lockAction += LockOnTarget;
             _input.dodgeAction += Dodge;
             _input.nextTarget += NextClosestTarget;
+            _input.changeTargetAction += ChangeTarget;
         }
 
         private void Dodge()
@@ -202,13 +213,13 @@ namespace StarterAssets
 
         private void Update()
         {
-
             _hasAnimator = TryGetComponent(out _animator);
             JumpAndGravity();
             GroundedCheck();
             Move();
             GetTargetHealth();
-            
+            if (isChangingTarget)
+                ChangeTargetPointer();
         }
 
 
@@ -247,6 +258,7 @@ namespace StarterAssets
 
         private void CameraRotation()
         {
+
             // if there is an input and camera position is not fixed
             if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
@@ -350,8 +362,35 @@ namespace StarterAssets
                 _animator.SetFloat("StrifeY", _input.move.y);
             }
             LockRotation();
+            allLeftTargets.Remove(lockTarget.GetComponent<Collider>());
+            allRightTargets.Remove(lockTarget.GetComponent<Collider>());
+        }
 
+        private void ChangeTargetPointer()
+        {
+            if (_input.targetLook.x > 0)
+            {
+                targetLockLerp += (0.1f * Time.deltaTime);
+                print("Right");
+                if (targetLockLerp > changeTargetThreshold)
+                    NextTarget(true);
+            }
+            else if (_input.targetLook.x < 0)
+            {
+                targetLockLerp -= (0.1f * Time.deltaTime);
+                print("Left");
+                if (targetLockLerp < -changeTargetThreshold)
+                    NextTarget(false);
+            }
+            else targetLockLerp = 0;
+            Mathf.Lerp(0, _input.targetLook.x, targetLockLerp);
 
+        }
+
+        private void ChangeTarget(bool toggle)
+        {
+            isChangingTarget = toggle;
+            print($"Change target = {toggle}");
         }
 
         private void LockRotation()
@@ -388,10 +427,56 @@ namespace StarterAssets
             targetHealth.fillAmount = lockTarget.GetComponent<EntityStats>().Health / 100;
         }
 
+        private void NextTarget(bool isRight)
+        {
+            if (allAvailableTargets.Count == 0)
+            {
+                cameraState = LocomotionState.Free;
+                LockOn = false;
+                return;
+            }
+
+            if (isRight)
+            {
+                if (allRightTargets.Count == 0) return;
+                var target = allRightTargets.OrderBy(t => Vector3.Distance(lockTarget.position, t.transform.position)).First();
+                lockTarget = target.transform;
+                targetLockLerp = 0;
+            }
+            else
+            {
+                if (allLeftTargets.Count == 0) return;
+                var target = allLeftTargets.OrderBy(t => Vector3.Distance(lockTarget.position, t.transform.position)).First();
+                lockTarget = target.transform;
+                targetLockLerp = 0;
+            }
+
+            GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = lockTarget;
+            CinemachineCameraTarget.transform.localPosition = lockOffsetPosition;
+            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(lockOffsetRotation.x, lockOffsetRotation.y, lockOffsetRotation.z);
+            RefreshTargets();
+        }
+
+        private void RefreshTargets()
+        {
+            allRightTargets.Clear();
+            allRightTargets.Clear();
+            rightTargetCol.SetActive(false);
+            leftTargetCol.SetActive(false);
+            StartCoroutine(ReActiveColliders());
+        }
+
+        private IEnumerator ReActiveColliders()
+        {
+            yield return new WaitForEndOfFrame();
+            rightTargetCol.SetActive(true);
+            leftTargetCol.SetActive(true);
+        }
+
         private void NextClosestTarget()
         {
             allAvailableTargets.RemoveAll(x => x == null);
-            if(allAvailableTargets.Count == 0)
+            if (allAvailableTargets.Count == 0)
             {
                 cameraState = LocomotionState.Free;
                 LockOn = false;
@@ -405,7 +490,7 @@ namespace StarterAssets
             lockTarget = allAvailableTargets[currentTargetIndex].transform;
             GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>().LookAt = lockTarget;
             CinemachineCameraTarget.transform.localPosition = lockOffsetPosition;
-            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(lockOffsetRotation.x,lockOffsetRotation.y,lockOffsetRotation.z);
+            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(lockOffsetRotation.x, lockOffsetRotation.y, lockOffsetRotation.z);
 
         }
 

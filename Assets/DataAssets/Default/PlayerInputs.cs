@@ -7,13 +7,16 @@ public class PlayerInputs : MonoBehaviour
     public Vector2 move;
     public Vector2 look;
     public Vector2 stanceLook;
+    public Vector2 targetLook;
     public bool jump;
     public bool sprint;
+    public bool changeTarget;
     public Action attackAction;
     public Action lockAction;
     public Action dodgeAction;
     public Action stanceAction;
     public Action nextTarget;
+    public Action<bool> changeTargetAction;
 
     public bool analogMovement;
 
@@ -33,6 +36,11 @@ public class PlayerInputs : MonoBehaviour
         }
     }
 
+    public void OnPointerTarget(InputValue value)
+    {
+        PointerTargetInput(value.Get<Vector2>());
+    }
+
     public void OnStancePointer(InputValue value)
     {
         StancePointerInput(value.Get<Vector2>());
@@ -46,6 +54,11 @@ public class PlayerInputs : MonoBehaviour
     public void OnSprint(InputValue value)
     {
         SprintInput(value.isPressed);
+    }
+
+    public void OnChangeTarget(InputValue value)
+    {
+        ChangeTargetInput(value.isPressed);
     }
 
     public void OnAttack()
@@ -96,6 +109,11 @@ public class PlayerInputs : MonoBehaviour
         look = newLookDirection;
     }
 
+    public void PointerTargetInput(Vector2 newTarget)
+    {
+        targetLook = newTarget;
+    }
+
     public void StancePointerInput(Vector2 newStance)
     {
         stanceLook = newStance;
@@ -109,6 +127,12 @@ public class PlayerInputs : MonoBehaviour
     public void SprintInput(bool newSprintState)
     {
         sprint = newSprintState;
+    }
+
+    public void ChangeTargetInput(bool changeTargetToggle)
+    {
+        changeTarget = changeTargetToggle;
+        changeTargetAction?.Invoke(changeTargetToggle);
     }
 
     private void OnApplicationFocus(bool hasFocus)
